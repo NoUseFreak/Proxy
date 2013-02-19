@@ -1,0 +1,11 @@
+{
+  "require": {
+    "symfony/http-foundation": "*",
+    "guzzle/guzzle": "*"
+  },
+  "autoload": {
+    "psr-0": {
+      "Proxy": "src/"
+    }
+  }
+}
