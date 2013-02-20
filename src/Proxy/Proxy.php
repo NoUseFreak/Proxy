@@ -30,7 +30,7 @@ class Proxy
         return $this->configuration;
     }
 
-    public function proxy(\Symfony\Component\HttpFoundation\Request $request)
+    public function handle(\Symfony\Component\HttpFoundation\Request $request)
     {
         $client = $this->getClient($request);
 
