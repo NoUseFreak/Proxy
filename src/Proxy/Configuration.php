@@ -13,6 +13,8 @@ namespace Proxy;
 class Configuration
 {
     protected $backend;
+    protected $backendPort = 80;
+    protected $aliases = array();
 
     public function setBackend($backend)
     {
@@ -22,6 +24,26 @@ class Configuration
     public function getBackend()
     {
         return $this->backend;
+    }
+
+    public function setBackendPort($backendPort)
+    {
+        $this->backendPort = $backendPort;
+    }
+
+    public function getBackendPort()
+    {
+        return $this->backendPort;
+    }
+
+    public function setAliases($aliases)
+    {
+        $this->aliases = $aliases;
+    }
+
+    public function getAliases()
+    {
+        return $this->aliases;
     }
 
 

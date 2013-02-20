@@ -36,16 +36,27 @@ class Proxy
 
         $method = strtolower($request->getMethod());
 
-        $response = $client->$method($request->getRequestUri())->send();
+        $gRequest = $client->$method($request->getRequestUri());
+
+        if ($method == 'post') {
+            $gRequest->addPostFields($_POST);
+        }
+
+        foreach ($request->cookies->all() as $name => $value) {
+            $gRequest->addCookie($name, str_replace($request->getHost(), $this->configuration->getBackend(), $value));
+        }
+
+        $response = $gRequest->send();
 
         return $this->createResponse($response, $request);
     }
 
     protected function getClient(\Symfony\Component\HttpFoundation\Request $request)
     {
-        return new \Guzzle\Http\Client('{scheme}://{host}', array(
+        return new \Guzzle\Http\Client('{scheme}://{host}' . ':' . $this->configuration->getBackendPort(), array(
              'scheme' => $request->getScheme(),
-             'host' =>  $this->configuration->getBackend()
+             'host' =>  $this->configuration->getBackend(),
+             'redirect.disable' => true,
         ));
     }
 
@@ -63,14 +74,21 @@ class Proxy
 
     protected function prepareResponse(Response $response, Request $request)
     {
-        $response->setContent(str_ireplace(array(
-            $request->getScheme() . '://' . $this->configuration->getBackend(),
-            $request->getScheme() . '://www.' . $this->configuration->getBackend(),
-        ),
-        array(
-            $request->getSchemeAndHttpHost(),
-            $request->getSchemeAndHttpHost(),
-        ), $response->getContent()));
+        $domains = array_merge(array($this->configuration->getBackend()), $this->configuration->getAliases());
+        $response->setContent(str_ireplace(array_map(function($value) use ($request) {
+            return $request->getScheme() . '://' . $value;
+        }, $domains),
+        $request->getSchemeAndHttpHost(), $response->getContent()));
+
+        if ($response->headers->has('set-cookie')) {
+            $response->headers->set('set-cookie', implode(';', array_map(function($item) use ($domains, $request) {
+                if (strpos($item, 'domain') !== false) {
+                    return str_replace($domains, $request->getHost(), $item);
+                }
+                return $item;
+            }, explode(';', $response->headers->get('set-cookie')))));
+
+        }
 
         return $response;
     }
