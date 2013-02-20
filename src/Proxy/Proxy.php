@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Clastic package.
+ * This file is part of the Proxy package.
  *
  * (c) Dries De Peuter <dries@nousefreak.be>
  *

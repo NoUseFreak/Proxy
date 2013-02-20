@@ -1,4 +1,14 @@
 {
+  "name": "nousefreak/proxy",
+  "description": "A simple proxy..",
+  "homepage": "http://nousefreak.be",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dries De Peuter",
+      "email": "dries@nousefreak.be"
+    }
+  ],
   "require": {
     "symfony/http-foundation": "*",
     "guzzle/guzzle": "*"
