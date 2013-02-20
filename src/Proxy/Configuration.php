@@ -15,6 +15,7 @@ class Configuration
     protected $backend;
     protected $backendPort = 80;
     protected $aliases = array();
+    protected $showProxy = true;
 
     public function setBackend($backend)
     {
@@ -46,5 +47,19 @@ class Configuration
         return $this->aliases;
     }
 
+    public function setHideProxy()
+    {
+        $this->showProxy = false;
+    }
+
+    public function setShowProxy()
+    {
+        $this->showProxy = true;
+    }
+
+    public function showProxyHeaders()
+    {
+        return $this->showProxy;
+    }
 
 }

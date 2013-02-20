@@ -46,6 +46,10 @@ class Proxy
             $gRequest->addCookie($name, str_replace($request->getHost(), $this->configuration->getBackend(), $value));
         }
 
+        if ($this->configuration->showProxyHeaders()) {
+            $gRequest->addHeader('X-Proxy-For', $request->getHost());
+        }
+
         $response = $gRequest->send();
 
         return $this->createResponse($response, $request);
